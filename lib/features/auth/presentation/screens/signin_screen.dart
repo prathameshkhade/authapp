@@ -1,16 +1,18 @@
-import 'package:authapp/features/auth/presentation/screens/signin_screen.dart';
 import 'package:authapp/features/auth/presentation/widgets/auth_button.dart';
 import 'package:authapp/features/auth/presentation/widgets/auth_field.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+class SigninScreen extends StatefulWidget {
+  static route() => CupertinoPageRoute(builder: (context) => const SigninScreen());
+
+  const SigninScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<SigninScreen> createState() => _SigninScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SigninScreenState extends State<SigninScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -37,33 +39,31 @@ class _SignupScreenState extends State<SignupScreen> {
               spacing: 25,
               children: <Widget>[
                 // Title
-                Text('Sign Up', style: theme.textTheme.displaySmall),
+                Text('Sign In', style: theme.textTheme.displaySmall),
 
                 // Email field
                 AuthField(label: 'email', controller: emailController),
 
                 // Password field
-                AuthField(
-                  label: 'password',
-                  controller: passwordController,
-                  isObsecureText: true,
-                ),
+                AuthField(label: 'password', controller: passwordController, isObsecureText: true,),
 
                 // Signup button
                 AuthButton(
-                  onPressed: () => {},
-                  child: Text('Sign Up', style: theme.textTheme.titleSmall),
+                  onPressed: () => {
+
+                  },
+                  child: Text('Sign In', style: theme.textTheme.titleSmall),
                 ),
 
                 GestureDetector(
-                  onTap: () => Navigator.push(context, SigninScreen.route()),
+                  onTap: () => Navigator.pop(context),
                   child: RichText(
                     text: TextSpan(
-                      text: 'Already have an account. ',
+                      text: 'Don\'t have an account. ',
                       style: theme.textTheme.bodySmall,
                       children: <TextSpan>[
                         TextSpan(
-                          text: 'Sign In',
+                          text: 'Sign up',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.primary,
                           ),
