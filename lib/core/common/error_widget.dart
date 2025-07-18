@@ -1,4 +1,4 @@
-import 'package:authapp/core/errors/Failure.dart';
+import 'package:authapp/core/errors/failure.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

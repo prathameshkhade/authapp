@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
+import 'package:authapp/core/config/theme.dart';
+import 'package:authapp/features/auth/presentation/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'features/auth/presentation/screens/auth_screen.dart';
 
 void main() {
   runApp(const AuthApp());
@@ -13,15 +13,12 @@ class AuthApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Authentication App',
-      theme: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.dark,
-        colorScheme: ColorScheme.fromSeed(seedColor: CupertinoColors.systemBlue),
-      ),
+      darkTheme: darkTheme,
       themeMode: ThemeMode.dark,
 
-      home: const AuthScreen(),
+      home: const SignupScreen(),
     );
   }
 }
