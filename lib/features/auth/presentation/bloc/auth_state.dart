@@ -7,18 +7,16 @@ class AuthActionState extends AuthState {}
 final class AuthInitial extends AuthState {}
 
 // Normal states
-class AuthLoading extends AuthState {}
+class AuthLoadingState extends AuthState {}
 
-class AuthSuccess extends AuthState {
+class AuthSuccessState extends AuthState {
   final String message;
-
-  AuthSuccess(this.message);
+  AuthSuccessState(this.message);
 }
 
-class AuthFailure extends AuthState {
+class AuthFailureState extends AuthState {
   final String message;
-
-  AuthFailure(this.message);
+  AuthFailureState(this.message);
 }
 
 // Actionable states

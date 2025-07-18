@@ -1,7 +1,10 @@
+import 'package:authapp/core/common/loader.dart';
+import 'package:authapp/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:authapp/features/auth/presentation/screens/signin_screen.dart';
 import 'package:authapp/features/auth/presentation/widgets/auth_button.dart';
 import 'package:authapp/features/auth/presentation/widgets/auth_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -13,6 +16,7 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -24,58 +28,88 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final formKey = GlobalKey<FormState>();
 
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 25,
-              children: <Widget>[
-                // Title
-                Text('Sign Up', style: theme.textTheme.displaySmall),
+      body: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AuthSuccessState) {
+            // Handle success - maybe navigate to home screen
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Sign up successful: ${state.message}')),
+            );
+          } else if (state is AuthFailureState) {
+            // Handle failure - show error message
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Error: ${state.message}')),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is AuthLoadingState) {
+            return const Loader();
+          }
 
-                // Email field
-                AuthField(label: 'email', controller: emailController),
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  // Title
+                  Text('Sign Up', style: theme.textTheme.displaySmall),
+                  const SizedBox(height: 25),
 
-                // Password field
-                AuthField(
-                  label: 'password',
-                  controller: passwordController,
-                  isObsecureText: true,
-                ),
+                  // Email field
+                  AuthField(label: 'email', controller: emailController),
+                  const SizedBox(height: 25),
 
-                // Signup button
-                AuthButton(
-                  onPressed: () => {},
-                  child: Text('Sign Up', style: theme.textTheme.titleSmall),
-                ),
+                  // Password field
+                  AuthField(
+                    label: 'password',
+                    controller: passwordController,
+                    isObsecureText: true,
+                  ),
+                  const SizedBox(height: 25),
 
-                GestureDetector(
-                  onTap: () => Navigator.push(context, SigninScreen.route()),
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Already have an account. ',
-                      style: theme.textTheme.bodySmall,
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: 'Sign In',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.primary,
+                  // Signup button
+                  AuthButton(
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        context.read<AuthBloc>().add(
+                          AuthSignUpEvent(
+                            email: emailController.text.trim(),
+                            password: passwordController.text.trim(),
                           ),
-                        ),
-                      ],
+                        );
+                      }
+                    },
+                    child: Text('Sign Up', style: theme.textTheme.titleSmall),
+                  ),
+                  const SizedBox(height: 25),
+
+                  GestureDetector(
+                    onTap: () => Navigator.push(context, SigninScreen.route()),
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Already have an account. ',
+                        style: theme.textTheme.bodySmall,
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Sign In',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
