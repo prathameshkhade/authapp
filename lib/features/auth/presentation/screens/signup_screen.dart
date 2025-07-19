@@ -31,16 +31,19 @@ class _SignupScreenState extends State<SignupScreen> {
 
     return Scaffold(
       body: BlocConsumer<AuthBloc, AuthState>(
+        buildWhen: (previous, current) => current is! AuthActionState,
+        listenWhen: (previous, current) => current is AuthActionState,
         listener: (context, state) {
-          if (state is AuthSuccessState) {
-            // Handle success - maybe navigate to home screen
+          if (state is AuthNotifyActionState) {
+            if (!state.isError) {
+              emailController.clear();
+              passwordController.clear();
+            }
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Sign up successful: ${state.message}')),
-            );
-          } else if (state is AuthFailureState) {
-            // Handle failure - show error message
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Error: ${state.message}')),
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: state.isError ? Colors.red : Colors.green,
+              ),
             );
           }
         },
@@ -48,7 +51,6 @@ class _SignupScreenState extends State<SignupScreen> {
           if (state is AuthLoadingState) {
             return const Loader();
           }
-
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Form(
@@ -76,6 +78,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   AuthButton(
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
+                        debugPrint('${emailController.text}, ${passwordController.text}');
                         context.read<AuthBloc>().add(
                           AuthSignUpEvent(
                             email: emailController.text.trim(),

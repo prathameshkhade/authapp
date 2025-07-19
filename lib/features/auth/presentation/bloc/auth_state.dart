@@ -2,6 +2,7 @@ part of 'auth_bloc.dart';
 
 @immutable
 sealed class AuthState {}
+
 class AuthActionState extends AuthState {}
 
 final class AuthInitial extends AuthState {}
@@ -11,12 +12,19 @@ class AuthLoadingState extends AuthState {}
 
 class AuthSuccessState extends AuthState {
   final String message;
+
   AuthSuccessState(this.message);
 }
 
-class AuthFailureState extends AuthState {
+class AuthFailureActionState extends AuthActionState {
   final String message;
-  AuthFailureState(this.message);
+  AuthFailureActionState(this.message);
 }
 
 // Actionable states
+class AuthNotifyActionState extends AuthActionState {
+  final String message;
+  final bool isError;
+
+  AuthNotifyActionState(this.message, {this.isError = false});
+}
