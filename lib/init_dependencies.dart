@@ -1,11 +1,10 @@
-import 'package:authapp/core/usecase/usecase.dart';
 import 'package:authapp/features/auth/data/datasource/remote_data_source.dart';
 import 'package:authapp/features/auth/data/datasource/supabase_data_source_impl.dart';
 import 'package:authapp/features/auth/data/repository/auth_repository.dart';
 import 'package:authapp/features/auth/domain/repository/auth_repository.dart';
+import 'package:authapp/features/auth/domain/usecase/user_sign_in.dart';
 import 'package:authapp/features/auth/domain/usecase/user_sign_up.dart';
 import 'package:authapp/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -32,11 +31,17 @@ void _initAuth() {
     () => AuthRepositoryImpl(remoteDataSource: serviceLocator()),
   );
 
-  serviceLocator.registerFactory<UseCase>(
+  serviceLocator.registerFactory(
     () => UserSignUpUseCase(authRepository: serviceLocator()),
   );
+  serviceLocator.registerFactory(
+    () => UserSignInUseCase(authRepository: serviceLocator()),
+  );
 
-  serviceLocator.registerLazySingleton<Bloc>(
-    () => AuthBloc(userSignUpUseCase: serviceLocator()),
+  serviceLocator.registerLazySingleton<AuthBloc>(
+    () => AuthBloc(
+      userSignUpUseCase: serviceLocator(),
+      userSignInUseCase: serviceLocator(),
+    ),
   );
 }

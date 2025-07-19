@@ -1,11 +1,13 @@
 import 'package:authapp/core/errors/server_exception.dart';
 import 'package:authapp/features/auth/data/datasource/remote_data_source.dart';
 import 'package:authapp/features/auth/data/models/user_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseRemoteDataSourceImpl implements RemoteDataSource {
   final SupabaseClient supabaseClient;
+
+  // Add a getter for the current user session.
+  Session? get currentUserSession => supabaseClient.auth.currentSession;
 
   SupabaseRemoteDataSourceImpl(this.supabaseClient);
 
@@ -20,15 +22,20 @@ class SupabaseRemoteDataSourceImpl implements RemoteDataSource {
         password: password,
       );
 
-      if (response.user == null) {
-        throw ServerException('Sign in failed');
+      if (response.user == null || response.session == null) {
+        throw ServerException('Invalid credentials');
       }
+
+      // Verify session is active
+      if (currentUserSession == null) {
+        throw ServerException('Authentication failed - No active session');
+      }
+
       final userModel = UserModel.fromJson(response.user!.toJson());
-      debugPrint('User model: $userModel');
       return userModel;
     }
     catch (e) {
-      throw ServerException('Sign in failed: $e');
+      throw ServerException(e.toString());
     }
   }
 
@@ -43,8 +50,8 @@ class SupabaseRemoteDataSourceImpl implements RemoteDataSource {
         password: password,
       );
 
-      if (response.user == null) {
-        throw Exception('Sign up failed');
+      if (response.user == null || response.session == null) {
+        throw ServerException('Sign up failed');
       }
 
       return UserModel.fromJson(response.user!.toJson());
