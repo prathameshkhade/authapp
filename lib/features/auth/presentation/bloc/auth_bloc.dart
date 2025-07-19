@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:authapp/features/auth/domain/entity/user_entity.dart';
 import 'package:authapp/features/auth/domain/usecase/user_sign_up.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,10 +37,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthNotifyActionState(failure.message, isError: true));
         emit(AuthFailureActionState(failure.message));
       },
-      (uid) {
-        debugPrint('User signed up successfully with UID: $uid');
+      (userEntity) {
+        debugPrint('User signed up successfully with UID: $userEntity');
         emit(AuthNotifyActionState('User signed up successfully', isError: false));
-        emit(AuthSuccessState(uid));
+        emit(AuthSuccessState(userEntity));
       }
     );
   }

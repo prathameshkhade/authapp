@@ -11,9 +11,8 @@ final class AuthInitial extends AuthState {}
 class AuthLoadingState extends AuthState {}
 
 class AuthSuccessState extends AuthState {
-  final String message;
-
-  AuthSuccessState(this.message);
+  final UserEntity userEntity;
+  AuthSuccessState(this.userEntity);
 }
 
 class AuthFailureActionState extends AuthActionState {

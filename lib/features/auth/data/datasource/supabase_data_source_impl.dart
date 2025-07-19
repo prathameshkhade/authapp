@@ -1,5 +1,6 @@
 import 'package:authapp/core/errors/server_exception.dart';
 import 'package:authapp/features/auth/data/datasource/remote_data_source.dart';
+import 'package:authapp/features/auth/data/models/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseRemoteDataSourceImpl implements RemoteDataSource {
@@ -8,7 +9,7 @@ class SupabaseRemoteDataSourceImpl implements RemoteDataSource {
   SupabaseRemoteDataSourceImpl(this.supabaseClient);
 
   @override
-  Future<String> signInWithEmailPassword({
+  Future<UserModel> signInWithEmailPassword({
     required String email,
     required String password,
   }) {
@@ -17,7 +18,7 @@ class SupabaseRemoteDataSourceImpl implements RemoteDataSource {
   }
 
   @override
-  Future<String> signUpWithEmailPassword({
+  Future<UserModel> signUpWithEmailPassword({
     required String email,
     required String password,
   }) async {
@@ -31,7 +32,7 @@ class SupabaseRemoteDataSourceImpl implements RemoteDataSource {
         throw Exception('Sign up failed');
       }
 
-      return response.user!.id;
+      return UserModel.fromJson(response.user!.toJson());
     }
     catch (e) {
       throw ServerException('Sign up failed: $e');

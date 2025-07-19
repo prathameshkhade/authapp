@@ -1,10 +1,12 @@
+import 'package:authapp/features/auth/data/models/user_model.dart';
+
 abstract interface class RemoteDataSource {
-  Future<String> signUpWithEmailPassword({
+  Future<UserModel> signUpWithEmailPassword({
     required String email,
     required String password,
   });
 
-  Future<String> signInWithEmailPassword({
+  Future<UserModel> signInWithEmailPassword({
     required String email,
     required String password,
   });
