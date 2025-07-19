@@ -1,6 +1,5 @@
 import 'package:authapp/core/errors/server_exception.dart';
 import 'package:authapp/features/auth/data/datasource/remote_data_source.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseRemoteDataSourceImpl implements RemoteDataSource {
