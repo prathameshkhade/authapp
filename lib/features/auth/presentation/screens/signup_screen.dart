@@ -46,6 +46,11 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
             );
           }
+          else if (state is AuthSuccessState) {
+            // Navigate to Login
+            Future.delayed(const Duration(milliseconds: 300));
+            Navigator.push(context, SigninScreen.route());
+          }
         },
         builder: (context, state) {
           if (state is AuthLoadingState) {

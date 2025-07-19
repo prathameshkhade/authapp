@@ -39,7 +39,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       },
       (userEntity) {
         debugPrint('User signed up successfully with UID: $userEntity');
-        emit(AuthNotifyActionState('User signed up successfully', isError: false));
+        emit(AuthNotifyActionState('User signed up successfully!', isError: false));
         emit(AuthSuccessState(userEntity));
       }
     );
