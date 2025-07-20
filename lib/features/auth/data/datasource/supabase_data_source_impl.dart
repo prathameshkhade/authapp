@@ -69,4 +69,9 @@ class SupabaseRemoteDataSourceImpl implements RemoteDataSource {
     debugPrint(user.toString());
     return user;
   }
+
+  @override
+  Future<void> logout() async {
+    await supabaseClient.auth.signOut();
+  }
 }

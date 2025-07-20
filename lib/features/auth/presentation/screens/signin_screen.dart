@@ -1,4 +1,5 @@
 import 'package:authapp/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:authapp/features/auth/presentation/screens/local_auth_screen.dart';
 import 'package:authapp/features/auth/presentation/widgets/auth_button.dart';
 import 'package:authapp/features/auth/presentation/widgets/auth_field.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/common/loader.dart';
-import 'home.dart';
 
 class SigninScreen extends StatefulWidget {
   static route() => CupertinoPageRoute(builder: (context) => const SigninScreen());
@@ -56,7 +56,7 @@ class _SigninScreenState extends State<SigninScreen> {
               ),
             );
 
-            Navigator.pushReplacement(context, Home.route());
+            Navigator.pushReplacement(context, LocalAuthScreen.route(state.userEntity));
           }
         },
         builder: (context, state) {

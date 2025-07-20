@@ -12,4 +12,6 @@ abstract interface class RemoteDataSource {
   });
 
   Future<UserModel?> getCurrentUser();
+
+  Future<void> logout();
 }

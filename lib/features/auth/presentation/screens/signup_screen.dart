@@ -6,7 +6,7 @@ import 'package:authapp/features/auth/presentation/widgets/auth_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'home.dart';
+import 'local_auth_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -43,7 +43,7 @@ class _SignupScreenState extends State<SignupScreen> {
         listenWhen: (previous, current) => current is AuthActionState,
         listener: (context, state) {
           if (state is AuthAlreadyLoggedInActionState) {
-            Navigator.pushReplacement(context, Home.route());
+            Navigator.pushReplacement(context, LocalAuthScreen.route(state.userEntity));
           }
           else if (state is AuthNotifyActionState) {
             if (!state.isError) {

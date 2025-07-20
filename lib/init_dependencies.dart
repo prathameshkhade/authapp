@@ -3,6 +3,7 @@ import 'package:authapp/features/auth/data/datasource/supabase_data_source_impl.
 import 'package:authapp/features/auth/data/repository/auth_repository.dart';
 import 'package:authapp/features/auth/domain/repository/auth_repository.dart';
 import 'package:authapp/features/auth/domain/usecase/get_current_user.dart';
+import 'package:authapp/features/auth/domain/usecase/logout_use_case.dart';
 import 'package:authapp/features/auth/domain/usecase/user_sign_in.dart';
 import 'package:authapp/features/auth/domain/usecase/user_sign_up.dart';
 import 'package:authapp/features/auth/presentation/bloc/auth_bloc.dart';
@@ -41,12 +42,14 @@ void _initAuth() {
     ..registerFactory(() => UserSignUpUseCase(authRepository: sl()))
     ..registerFactory(() => UserSignInUseCase(authRepository: sl()))
     ..registerFactory(() => GetCurrentUserUseCase(authRepository: sl()))
+    ..registerFactory(() => LogoutUseCase(authRepository: sl()))
     // bloc
     ..registerLazySingleton<AuthBloc>(
       () => AuthBloc(
         userSignUpUseCase: sl(),
         userSignInUseCase: sl(),
         getCurrentUseCase: sl(),
+        logoutUseCase: sl(),
       ),
     );
 }

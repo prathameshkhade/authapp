@@ -29,3 +29,5 @@ class AuthNotifyActionState extends AuthActionState {
 class AuthAlreadyLoggedInActionState extends AuthLoginSuccessActionState {
   AuthAlreadyLoggedInActionState(super.userEntity);
 }
+
+class AuthLoggedOutActionState extends AuthActionState {}

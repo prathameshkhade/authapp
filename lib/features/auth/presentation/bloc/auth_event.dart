@@ -19,3 +19,6 @@ class AuthSignInEvent extends AuthEvent {
 
 /// To check if user is authenticated or not?
 class AuthCheckUserLoggedInEvent extends AuthEvent {}
+
+// Logout the current session
+class AuthLogoutEvent extends AuthEvent {}
