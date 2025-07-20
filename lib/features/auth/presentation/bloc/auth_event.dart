@@ -22,3 +22,9 @@ class AuthCheckUserLoggedInEvent extends AuthEvent {}
 
 // Logout the current session
 class AuthLogoutEvent extends AuthEvent {}
+
+// request for local auth and returns the user if authenticated
+class AuthLoginWithBiometricsRequested extends AuthEvent {
+  // final UserEntity user;
+  // AuthLoginWithBiometricsRequested(this.user);
+}

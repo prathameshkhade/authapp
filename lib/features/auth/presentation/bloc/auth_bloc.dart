@@ -8,6 +8,9 @@ import 'package:authapp/features/auth/domain/usecase/user_sign_up.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/errors/failures.dart';
+import '../../domain/repository/auth_repository.dart';
+
 part 'auth_event.dart';
 
 part 'auth_state.dart';
@@ -17,21 +20,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserSignInUseCase _userSignInUseCase;
   final GetCurrentUserUseCase _getCurrentUserUseCase;
   final LogoutUseCase _logoutUseCase;
+  final LocalAuthRepository _localAuthRepository;
 
   AuthBloc({
     required UserSignUpUseCase userSignUpUseCase,
     required UserSignInUseCase userSignInUseCase,
     required GetCurrentUserUseCase getCurrentUseCase,
     required LogoutUseCase logoutUseCase,
+    required LocalAuthRepository localAuthRepositoryImpl,
   }) : _userSignUpUseCase = userSignUpUseCase,
        _userSignInUseCase = userSignInUseCase,
        _getCurrentUserUseCase = getCurrentUseCase,
        _logoutUseCase = logoutUseCase,
-       super(AuthInitial()) {
+       _localAuthRepository = localAuthRepositoryImpl,
+  super(AuthInitial()) {
     on<AuthSignUpEvent>(_onAuthSignUpEvent);
     on<AuthSignInEvent>(_onAuthSignInEvent);
     on<AuthCheckUserLoggedInEvent>(_onAuthCheckUserLoggedInEvent);
     on<AuthLogoutEvent>(_onAuthLogoutEvent);
+    on<AuthLoginWithBiometricsRequested>(_onAuthLoginWithBiometricsRequested);
   }
 
   FutureOr<void> _onAuthSignUpEvent(
@@ -103,5 +110,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     await _logoutUseCase(NoParams());
     emit(AuthLoggedOutActionState());
+  }
+
+  FutureOr<void> _onAuthLoginWithBiometricsRequested(
+    AuthLoginWithBiometricsRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    final res = await _localAuthRepository.authenticate();
+    res.fold(
+      (failure) => emit(LocalAuthFailedActionState(failure)),
+      (didAuthenticated) => emit(LocalAuthActionState(didAuthenticated))
+    );
   }
 }

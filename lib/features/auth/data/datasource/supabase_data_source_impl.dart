@@ -64,10 +64,15 @@ class SupabaseRemoteDataSourceImpl implements RemoteDataSource {
 
   @override
   Future<UserModel?> getCurrentUser() async {
-    debugPrint(supabaseClient.auth.currentUser!.toJson().toString());
-    final user = UserModel.fromJson(supabaseClient.auth.currentUser!.toJson());
-    debugPrint(user.toString());
-    return user;
+    try {
+      debugPrint(supabaseClient.auth.currentUser!.toJson().toString());
+      final user = UserModel.fromJson(supabaseClient.auth.currentUser!.toJson());
+      debugPrint(user.toString());
+      return user;
+    }
+    catch (e) {
+      return null;
+    }
   }
 
   @override

@@ -17,3 +17,7 @@ abstract interface class AuthRepository {
 
   Future<void> logout();
 }
+
+abstract interface class LocalAuthRepository {
+  Future<Either<Failure, bool>> authenticate();
+}

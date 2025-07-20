@@ -9,9 +9,11 @@ import 'package:authapp/features/auth/domain/usecase/user_sign_up.dart';
 import 'package:authapp/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:authapp/secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/config/app_secrets.dart';
+import 'features/auth/data/repository/local_auth_repository.dart';
 
 final sl = GetIt.instance;
 
@@ -26,6 +28,7 @@ Future<void> initDependencies() async {
     )
   );
   sl.registerLazySingleton(() => supabase.client);
+  sl.registerLazySingleton(() => LocalAuthentication());
 }
 
 void _initAuth() {
@@ -37,6 +40,9 @@ void _initAuth() {
     // auth repo
     ..registerFactory<AuthRepository>(
       () => AuthRepositoryImpl(remoteDataSource: sl()),
+    )
+    ..registerFactory<LocalAuthRepository>(
+        ()=> LocalAuthRepositoryImpl(sl())
     )
     // Usecase
     ..registerFactory(() => UserSignUpUseCase(authRepository: sl()))
@@ -50,6 +56,7 @@ void _initAuth() {
         userSignInUseCase: sl(),
         getCurrentUseCase: sl(),
         logoutUseCase: sl(),
+        localAuthRepositoryImpl: sl(),
       ),
     );
 }
