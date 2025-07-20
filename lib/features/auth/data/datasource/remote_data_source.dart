@@ -10,4 +10,6 @@ abstract interface class RemoteDataSource {
     required String email,
     required String password,
   });
+
+  Future<UserModel?> getCurrentUser();
 }

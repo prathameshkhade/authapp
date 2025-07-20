@@ -17,3 +17,5 @@ class AuthSignInEvent extends AuthEvent {
   AuthSignInEvent({required this.email, required this.password});
 }
 
+/// To check if user is authenticated or not?
+class AuthCheckUserLoggedInEvent extends AuthEvent {}

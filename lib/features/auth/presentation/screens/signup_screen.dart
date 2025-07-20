@@ -6,6 +6,8 @@ import 'package:authapp/features/auth/presentation/widgets/auth_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'home.dart';
+
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
@@ -17,6 +19,12 @@ class _SignupScreenState extends State<SignupScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<AuthBloc>().add(AuthCheckUserLoggedInEvent());
+  }
 
   @override
   void dispose() {
@@ -34,7 +42,10 @@ class _SignupScreenState extends State<SignupScreen> {
         buildWhen: (previous, current) => current is! AuthActionState,
         listenWhen: (previous, current) => current is AuthActionState,
         listener: (context, state) {
-          if (state is AuthNotifyActionState) {
+          if (state is AuthAlreadyLoggedInActionState) {
+            Navigator.pushReplacement(context, Home.route());
+          }
+          else if (state is AuthNotifyActionState) {
             if (!state.isError) {
               emailController.clear();
               passwordController.clear();
@@ -46,7 +57,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
             );
           }
-          else if (state is AuthSuccessActionState) {
+          else if (state is AuthLoginSuccessActionState) {
             // Navigate to Login
             Future.delayed(const Duration(milliseconds: 300));
             Navigator.push(context, SigninScreen.route());

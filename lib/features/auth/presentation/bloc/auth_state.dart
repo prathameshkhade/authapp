@@ -9,9 +9,9 @@ final class AuthInitial extends AuthState {}
 // Normal states
 class AuthLoadingState extends AuthState {}
 
-class AuthSuccessActionState extends AuthActionState {
+class AuthLoginSuccessActionState extends AuthActionState {
   final UserEntity userEntity;
-  AuthSuccessActionState(this.userEntity);
+  AuthLoginSuccessActionState(this.userEntity);
 }
 
 // Actionable states
@@ -24,4 +24,8 @@ class AuthNotifyActionState extends AuthActionState {
   final String message;
   final bool isError;
   AuthNotifyActionState(this.message, {this.isError = false});
+}
+
+class AuthAlreadyLoggedInActionState extends AuthLoginSuccessActionState {
+  AuthAlreadyLoggedInActionState(super.userEntity);
 }

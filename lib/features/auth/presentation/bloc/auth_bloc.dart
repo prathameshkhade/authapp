@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:authapp/features/auth/domain/entity/user_entity.dart';
+import 'package:authapp/features/auth/domain/usecase/get_current_user.dart';
 import 'package:authapp/features/auth/domain/usecase/user_sign_in.dart';
 import 'package:authapp/features/auth/domain/usecase/user_sign_up.dart';
 import 'package:flutter/foundation.dart';
@@ -13,18 +14,22 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserSignUpUseCase _userSignUpUseCase;
   final UserSignInUseCase _userSignInUseCase;
+  final GetCurrentUserUseCase _getCurrentUserUseCase;
 
   AuthBloc({
     required UserSignUpUseCase userSignUpUseCase,
     required UserSignInUseCase userSignInUseCase,
+    required GetCurrentUserUseCase getCurrentUseCase,
   }) : _userSignUpUseCase = userSignUpUseCase,
        _userSignInUseCase = userSignInUseCase,
+      _getCurrentUserUseCase = getCurrentUseCase,
        super(AuthInitial()) {
-    on<AuthSignUpEvent>(onAuthSignUpEvent);
-    on<AuthSignInEvent>(onAuthSignInEvent);
+    on<AuthSignUpEvent>(_onAuthSignUpEvent);
+    on<AuthSignInEvent>(_onAuthSignInEvent);
+    on<AuthCheckUserLoggedInEvent>(_onAuthCheckUserLoggedInEvent);
   }
 
-  FutureOr<void> onAuthSignUpEvent(
+  FutureOr<void> _onAuthSignUpEvent(
     AuthSignUpEvent event,
     Emitter<AuthState> emit,
   ) async {
@@ -48,12 +53,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(
           AuthNotifyActionState('User signed up successfully!', isError: false),
         );
-        emit(AuthSuccessActionState(userEntity));
+        emit(AuthLoginSuccessActionState(userEntity));
       },
     );
   }
 
-  FutureOr<void> onAuthSignInEvent(
+  FutureOr<void> _onAuthSignInEvent(
     AuthSignInEvent event,
     Emitter<AuthState> emit,
   ) async {
@@ -70,8 +75,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       },
       (user) {
         emit(AuthNotifyActionState('Successfully signed in!', isError: false));
-        emit(AuthSuccessActionState(user));
+        emit(AuthLoginSuccessActionState(user));
       },
     );
+  }
+
+  FutureOr<void> _onAuthCheckUserLoggedInEvent(AuthCheckUserLoggedInEvent event, Emitter<AuthState> emit) async {
+    // emit(AuthLoadingState());
+    final user = await _getCurrentUserUseCase(NoParams());
+    if (user != null) {
+      emit(AuthAlreadyLoggedInActionState(user));
+    }
   }
 }

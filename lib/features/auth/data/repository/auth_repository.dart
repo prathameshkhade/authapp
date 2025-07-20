@@ -45,4 +45,9 @@ class AuthRepositoryImpl implements AuthRepository {
       return Either.left(Failure(e.message));
     }
   }
+
+  @override
+  Future<UserEntity?> getCurrentUser() async {
+    return await remoteDataSource.getCurrentUser();
+  }
 }
