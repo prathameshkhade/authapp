@@ -33,17 +33,17 @@ class LocalAuthRepositoryImpl implements LocalAuthRepository {
         options: const AuthenticationOptions(
           useErrorDialogs: true, // Show system dialogs
           stickyAuth: true, // Prevent auth dialog dismissal
-          biometricOnly: true  // Force biometric auth
+          biometricOnly: false // Force biometric auth
         )
       );
 
       return Either.right(didAuthenticate);
     }
     on PlatformException catch (e) {
-      return Either.left(Failure('Authentication error: ${e.message}'));
+      return Either.left(Failure(e.message.toString()));
     }
     catch (e) {
-      return Either.left(Failure('Authentication failed: ${e.toString()}'));
+      return Either.left(Failure(e.toString()));
     }
   }
 }
